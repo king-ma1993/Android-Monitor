@@ -10,3 +10,5 @@ dependencies {
     implementation project(path: ':plugin-common')
     implementation project(path: ':android-gradle-adapter:android-gradle-api')
 }
+
+apply plugin: 'java-gradle-plugin'

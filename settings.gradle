@@ -12,9 +12,10 @@
 //        mavenCentral()
 //    }
 //}
-rootProject.name = "TestDemo"
+rootProject.name = "Android-Monitor"
 include ':app'
 include ':androidmonitor-plugin'
 include ':plugin-common'
 include ':android-gradle-adapter'
 include ':android-gradle-adapter:android-gradle-api'
+include ':asm-transform'
