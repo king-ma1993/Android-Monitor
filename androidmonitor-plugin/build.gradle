@@ -7,4 +7,6 @@ dependencies {
     testCompileOnly 'com.android.tools.build:gradle:4.0.0'
     implementation 'org.apache.commons:commons-compress:1.21'
     kapt 'com.google.auto.service:auto-service:1.0'
+    implementation project(path: ':plugin-common')
+    implementation project(path: ':android-gradle-adapter:android-gradle-api')
 }
