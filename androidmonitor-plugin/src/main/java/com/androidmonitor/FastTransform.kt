@@ -101,7 +101,6 @@ class FastTransform(private val project: Project) : Transform() {
             }
         }
 
-
     private fun onBeforeTransform() {
         transformers.forEach { pluginTransform ->
             transformContext?.let { it -> pluginTransform.onBeforeTransform(it) }
@@ -300,15 +299,7 @@ class FastTransform(private val project: Project) : Transform() {
     }
 
 
-    private fun onPreTransform() {
-        transformContext?.apply {
-            transformInvocation.inputs.map {
-                it.jarInputs + it.directoryInputs
-            }.flatten().forEach {
-                extractClassFile(it.file)
-            }
-        }
-    }
+
 
     private fun extractClassFile(inputFile: File) {
         //TODO 后面改为使用线程池处理，提高效率

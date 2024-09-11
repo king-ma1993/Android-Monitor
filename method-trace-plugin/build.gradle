@@ -1,0 +1,9 @@
+apply from: "$rootDir/gradle/fustplugin.gradle"
+
+dependencies {
+    kapt "com.google.auto.service:auto-service:1.0"
+    implementation project(path: ':plugin-common')
+    implementation project(path: ':asm-transform')
+    kaptTest 'com.google.auto.service:auto-service:1.0'
+    compileOnly 'com.android.tools.build:gradle:3.6.4'
+}
