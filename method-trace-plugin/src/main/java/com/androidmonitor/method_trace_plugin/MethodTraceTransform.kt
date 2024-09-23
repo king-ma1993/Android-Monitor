@@ -10,6 +10,8 @@ import org.objectweb.asm.tree.ClassNode
 @AutoService(IClassTransform::class)
 class MethodTraceTransform : IClassTransform {
 
+    private val TAG = "MethodCollector"
+
     private val methodCollector = MethodCollector()
 
     override fun transform(transformContext: TransformContext, klass: ClassNode): ClassNode {
@@ -47,11 +49,17 @@ class MethodTraceTransform : IClassTransform {
 
     override fun preTransform(transformContext: TransformContext, klass: ClassNode) {
         super.preTransform(transformContext, klass)
+        ConfProvider.init(transformContext)
         methodCollector.collectClassExtend(klass)
         if (isABSClass(klass)) return
         methodCollector.collectMethod(klass)
+        //todo 先把字节码插桩阶段放到混淆前，所以这里先不用处理混淆映射的逻辑
+        saveIgnoreCollectedMethod()
 
+    }
 
+    private fun saveIgnoreCollectedMethod() {
+        methodCollector.saveIgnoreCollectedMethod()
     }
 
 }

@@ -1,10 +1,18 @@
 package com.androidmonitor.method_trace_plugin
 
 import com.androidmonitor.method_trace_plugin.item.TraceMethod
+import com.androidmonitor.method_trace_plugin.retrace.MappingCollector
+import com.androidmonitor.method_trace_plugin.util.Log
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.tree.AbstractInsnNode
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.InsnList
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
+import java.io.PrintWriter
+import java.io.Writer
+import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -12,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class MethodCollector {
     companion object {
         private const val CONSTRUCTOR = "<init>"
+        private const val TAG = "AndroidMonitor.MethodCollector"
     }
 
     //类继承关系的map
@@ -147,6 +156,51 @@ class MethodCollector {
             }
         }
         return true
+    }
+
+    //todo mappingCollector相关暂时不处理，后面在统一加回来
+    fun saveIgnoreCollectedMethod(mappingCollector: MappingCollector? = null) {
+        val configuration = ConfProvider.getConfiguration()
+        val methodMapFile = File(configuration.ignoreMethodMapFilePath)
+        if (!methodMapFile.parentFile.exists()) {
+            methodMapFile.parentFile.mkdirs()
+        }
+        val ignoreMethodList: MutableList<TraceMethod> = ArrayList<TraceMethod>()
+        ignoreMethodList.addAll(collectedIgnoreMethodMap.values)
+        Log.i(
+            TAG,
+            "[saveIgnoreCollectedMethod] size:%s path:%s",
+            collectedIgnoreMethodMap.size,
+            methodMapFile.absolutePath
+        )
+
+        Collections.sort(ignoreMethodList,
+            java.util.Comparator<TraceMethod> { o1, o2 -> o1.className.compareTo(o2.className) })
+
+        var pw: PrintWriter? = null
+        try {
+            val fileOutputStream = FileOutputStream(methodMapFile, false)
+            val w: Writer = OutputStreamWriter(fileOutputStream, "UTF-8")
+            pw = PrintWriter(w)
+            pw.println("ignore methods:")
+            //todo 这里先不做混淆后的还原处理，因为现在transform的阶段不是在混淆task之后
+//            for (traceMethod in ignoreMethodList) {
+//                traceMethod.revert(mappingCollector)
+//                pw.println(traceMethod.toIgnoreString())
+//            }
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "write method map Exception:%s",
+                e.message
+            )
+            e.printStackTrace()
+        } finally {
+            if (pw != null) {
+                pw.flush()
+                pw.close()
+            }
+        }
     }
 
 }
