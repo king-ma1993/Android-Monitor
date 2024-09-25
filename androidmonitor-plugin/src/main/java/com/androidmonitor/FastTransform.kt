@@ -68,7 +68,7 @@ class FastTransform(private val project: Project) : Transform() {
         this.outputs.clear()
         this.collectors.clear()
         val executor = Executors.newFixedThreadPool(NCPU)
-        onBeforeTransform()
+
 
         // Look ahead to determine which input need to be transformed even incremental build
         val outOfDate = this.lookAhead(executor).onEach {
@@ -78,7 +78,9 @@ class FastTransform(private val project: Project) : Transform() {
         doPreTransform(executor).forEach {
             it.get()
         }
+        onAfterPreTransform()
 
+        onBeforeTransform()
         try {
             transFunc(executor, outOfDate).forEach {
                 it.get()
@@ -102,6 +104,12 @@ class FastTransform(private val project: Project) : Transform() {
     private fun onBeforeTransform() {
         transformers.forEach { pluginTransform ->
             transformContext?.let { it -> pluginTransform.onBeforeTransform(it) }
+        }
+    }
+
+    private fun onAfterPreTransform() {
+        transformers.forEach { pluginTransform ->
+            transformContext?.let { it -> pluginTransform.onAfterPreTransform(it) }
         }
     }
 

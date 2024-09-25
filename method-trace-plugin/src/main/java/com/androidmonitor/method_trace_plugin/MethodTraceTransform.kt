@@ -27,6 +27,8 @@ class MethodTraceTransform : IClassTransform {
 
 
 
+
+
         }
 
 
@@ -48,14 +50,16 @@ class MethodTraceTransform : IClassTransform {
     }
 
     override fun preTransform(transformContext: TransformContext, klass: ClassNode) {
-        super.preTransform(transformContext, klass)
         ConfProvider.init(transformContext)
         methodCollector.collectClassExtend(klass)
         if (isABSClass(klass)) return
         methodCollector.collectMethod(klass)
+    }
+
+    override fun onAfterPreTransform(transformContext: TransformContext) {
         //todo 先把字节码插桩阶段放到混淆前，所以这里先不用处理混淆映射的逻辑
         saveIgnoreCollectedMethod()
-
+        saveCollectedMethod()
     }
 
     private fun saveIgnoreCollectedMethod() {

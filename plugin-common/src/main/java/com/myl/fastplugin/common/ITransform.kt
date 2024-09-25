@@ -12,4 +12,6 @@ interface ITransform {
     fun onBeforeTransform(transformContext: TransformContext) {}
 
     fun onAfterTransform(transformContext: TransformContext) {}
+
+    fun onAfterPreTransform(transformContext: TransformContext) {}
 }
