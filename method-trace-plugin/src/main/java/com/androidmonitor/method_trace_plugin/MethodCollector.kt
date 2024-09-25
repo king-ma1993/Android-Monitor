@@ -1,5 +1,6 @@
 package com.androidmonitor.method_trace_plugin
 
+import com.androidmonitor.TraceBuildConstants
 import com.androidmonitor.method_trace_plugin.item.TraceMethod
 import com.androidmonitor.method_trace_plugin.retrace.MappingCollector
 import com.androidmonitor.method_trace_plugin.util.Log
@@ -183,11 +184,12 @@ class MethodCollector {
             val w: Writer = OutputStreamWriter(fileOutputStream, "UTF-8")
             pw = PrintWriter(w)
             pw.println("ignore methods:")
-            //todo 这里先不做混淆后的还原处理，因为现在transform的阶段不是在混淆task之后
-//            for (traceMethod in ignoreMethodList) {
+
+            for (traceMethod in ignoreMethodList) {
+                //todo 这里先不做混淆后的还原处理，因为现在transform的阶段不是在混淆task之后
 //                traceMethod.revert(mappingCollector)
-//                pw.println(traceMethod.toIgnoreString())
-//            }
+                pw.println(traceMethod.toIgnoreString())
+            }
         } catch (e: Exception) {
             Log.e(
                 TAG,
@@ -203,4 +205,51 @@ class MethodCollector {
         }
     }
 
+    //todo mappingCollector相关暂时不处理，后面在统一加回来
+    fun saveCollectedMethod(mappingCollector: MappingCollector? = null) {
+        val configuration = ConfProvider.getConfiguration()
+        val methodMapFile = File(configuration.methodMapFilePath)
+        if (!methodMapFile.parentFile.exists()) {
+            methodMapFile.parentFile.mkdirs()
+        }
+        val methodList: MutableList<TraceMethod> = java.util.ArrayList()
+        //因为dispatchMessage是android的源码，所以肯定不会出现在这个列表中，但是事件的分发都依靠他，所以需要用它记录堆栈
+        val extra = TraceMethod.create(
+            TraceBuildConstants.METHOD_ID_DISPATCH, Opcodes.ACC_PUBLIC, "android.os.Handler",
+            "dispatchMessage", "(Landroid.os.Message;)V"
+        )
+        collectedMethodMap[extra.getMethodName()] = extra
+        methodList.addAll(collectedMethodMap.values)
+        Log.i(
+            TAG,
+            "[saveCollectedMethod] size:%s incrementCount:%s path:%s",
+            collectedMethodMap.size,
+            incrementCount.get(),
+            methodMapFile.absolutePath
+        )
+        methodList.sortWith(Comparator { o1, o2 -> o1.id - o2.id })
+        var pw: PrintWriter? = null
+        try {
+            val fileOutputStream = FileOutputStream(methodMapFile, false)
+            val w: Writer = OutputStreamWriter(fileOutputStream, "UTF-8")
+            pw = PrintWriter(w)
+            for (traceMethod in methodList) {
+                //todo 这里先不做混淆后的还原处理，因为现在transform的阶段不是在混淆task之后
+//                traceMethod.revert(mappingCollector)
+                pw.println(traceMethod.toString())
+            }
+        } catch (e: java.lang.Exception) {
+            Log.e(
+                TAG,
+                "write method map Exception:%s",
+                e.message
+            )
+            e.printStackTrace()
+        } finally {
+            if (pw != null) {
+                pw.flush()
+                pw.close()
+            }
+        }
+    }
 }

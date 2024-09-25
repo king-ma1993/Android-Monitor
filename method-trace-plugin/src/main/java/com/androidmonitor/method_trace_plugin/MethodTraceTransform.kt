@@ -62,4 +62,8 @@ class MethodTraceTransform : IClassTransform {
         methodCollector.saveIgnoreCollectedMethod()
     }
 
+    private fun saveCollectedMethod() {
+        methodCollector.saveCollectedMethod()
+    }
+
 }

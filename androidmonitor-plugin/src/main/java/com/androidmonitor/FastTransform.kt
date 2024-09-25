@@ -75,8 +75,6 @@ class FastTransform(private val project: Project) : Transform() {
             project.logger.info("✨ ${it.canonicalPath} OUT-OF-DATE ")
         }
 
-//        val preExecutor = Executors.newFixedThreadPool(NCPU)
-
         doPreTransform(executor).forEach {
             it.get()
         }
@@ -302,7 +300,6 @@ class FastTransform(private val project: Project) : Transform() {
 
 
     private fun extractClassFile(inputFile: File) {
-        //TODO 后面改为使用线程池处理，提高效率
         inputFile.apply {
             when {
                 isDirectory -> toURI().let { base ->

@@ -50,10 +50,16 @@ object ConfProvider {
         return "${getMappingOut()}/ignoreMethodMapping.txt"
     }
 
+    private fun getMethodMapFilePath(): String {
+        return "${getMappingOut()}/methodMapping.txt"
+    }
 
     fun getConfiguration(): Configuration {
         if (configuration == null) {
-            configuration = Configuration(ignoreMethodMapFilePath = getIgnoreMethodMapFilePath())
+            configuration = Configuration(
+                ignoreMethodMapFilePath = getIgnoreMethodMapFilePath(),
+                methodMapFilePath = getMethodMapFilePath()
+            )
         }
         return configuration!!
     }
