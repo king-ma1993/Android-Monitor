@@ -38,6 +38,20 @@ class MethodCollector {
         collectedClassExtendMap[className] = superName
     }
 
+    fun isWindowFocusChangeMethod(name: String?, desc: String?): Boolean {
+        return null != name && null != desc && name == TraceBuildConstants.MATRIX_TRACE_ON_WINDOW_FOCUS_METHOD
+                && desc == TraceBuildConstants.MATRIX_TRACE_ON_WINDOW_FOCUS_METHOD_ARGS
+    }
+
+
+    fun getCollectedMethodMap(): ConcurrentHashMap<String, TraceMethod> {
+        return collectedMethodMap
+    }
+
+    fun getCollectedClassExtendMap(): ConcurrentHashMap<String, String> {
+        return collectedClassExtendMap
+    }
+
     fun collectMethod(klass: ClassNode) {
         klass.methods.forEach { methodNode ->
             val className = klass.name
