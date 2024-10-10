@@ -4,12 +4,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.tencent.matrix.lifecycle.IStateObserver
-import com.tencent.matrix.lifecycle.MatrixLifecycleThread
-import com.tencent.matrix.lifecycle.owners.ProcessUILifecycleOwner
-import com.tencent.matrix.util.MatrixLog
-import com.tencent.matrix.util.MatrixUtil
-import com.tencent.matrix.util.safeApply
+import com.android.monitor.trace.lifecycle.IStateObserver
+import com.android.monitor.trace.lifecycle.MatrixLifecycleThread
+import com.android.monitor.trace.lifecycle.owners.ProcessUILifecycleOwner
+import com.android.monitor.util.MatrixLog
+import com.android.monitor.util.MatrixUtil
+import com.android.monitor.util.safeApply
 
 /**
  * Created by Yves on 2022/2/10

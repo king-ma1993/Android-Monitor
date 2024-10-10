@@ -2,7 +2,7 @@ package com.tencent.matrix.lifecycle.supervisor
 
 import android.content.Context
 import android.os.*
-import com.tencent.matrix.util.MatrixUtil
+import com.android.monitor.util.MatrixUtil
 
 /**
  * Created by Yves on 2021/11/11

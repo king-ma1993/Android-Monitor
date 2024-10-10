@@ -4,10 +4,13 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.*
+import com.android.monitor.trace.lifecycle.MatrixLifecycleThread
+import com.android.monitor.trace.lifecycle.StatefulOwner
 import com.android.monitor.trace.lifecycle.supervisor.DispatcherStateOwner
 import com.android.monitor.trace.lifecycle.supervisor.ProcessSubordinate
-import com.tencent.matrix.lifecycle.MatrixLifecycleThread
-import com.tencent.matrix.lifecycle.StatefulOwner
+import com.android.monitor.util.MatrixLog
+import com.android.monitor.util.MatrixUtil
+import com.android.monitor.util.safeApply
 import com.tencent.matrix.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue

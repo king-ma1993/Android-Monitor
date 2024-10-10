@@ -8,11 +8,26 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
 import android.util.Log
+import com.android.monitor.trace.lifecycle.IBackgroundStatefulOwner
+import com.android.monitor.trace.lifecycle.IForegroundStatefulOwner
+import com.android.monitor.trace.lifecycle.ISerialObserver
+import com.android.monitor.trace.lifecycle.IStatefulOwner
+import com.android.monitor.trace.lifecycle.MatrixLifecycleThread
+import com.android.monitor.trace.lifecycle.MultiSourceStatefulOwner
+import com.android.monitor.trace.lifecycle.ReduceOperators
+import com.android.monitor.trace.lifecycle.owners.ProcessUILifecycleOwner
+import com.android.monitor.trace.lifecycle.reverse
+import com.android.monitor.trace.lifecycle.shadow
 import com.android.monitor.trace.lifecycle.supervisor.DispatcherStateOwner
 import com.android.monitor.trace.lifecycle.supervisor.IProcessListener
 import com.android.monitor.trace.lifecycle.supervisor.ProcessSubordinate
+import com.android.monitor.util.MatrixLog
+import com.android.monitor.util.MatrixUtil
+import com.android.monitor.util.MemInfo
+import com.android.monitor.util.safeApply
+import com.android.monitor.util.safeLet
+import com.android.monitor.util.safeLetOrNull
 import com.tencent.matrix.lifecycle.*
-import com.tencent.matrix.lifecycle.owners.*
 import com.tencent.matrix.util.*
 
 /**
